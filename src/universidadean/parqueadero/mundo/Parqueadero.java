@@ -266,7 +266,13 @@ public class Parqueadero {
      * Si la hora actual es igual a la hora de cierre, el parqueadero se cierra.
      */
     public void avanzarHora() {
-        horaActual++;
+        if(horaActual < 21) {
+            horaActual++;
+        }
+        if(horaActual == 21) {
+            // parqueadero cerrado
+            abierto=false;
+        }
     }
 
     /**
@@ -317,27 +323,19 @@ public class Parqueadero {
      * @return Respuesta 1.
      */
     public String metodo1() {
-        String emp = "";
-        //int numPuesto = buscarPuestoCarro(pPlaca.toUpperCase());
-        int puesto1 = CARRO_NO_EXISTE;
+        String placa = "";
+        int mayorTiempo = 22;
 
-        for (Puesto puesto : puestos) {
-            if (puesto.estaOcupado() == true){
-                //Carro carro = puestos[numPuesto].darCarro();
-                //puestos[numPuesto].sacarCarro();
-
+        for (Puesto puesto: puestos) {
+            if (puesto.estaOcupado()== true){
+                Carro carro = puesto.darCarro();
+                if (carro.darHoraLlegada()<mayorTiempo){
+                    mayorTiempo = carro.darHoraLlegada();
+                    placa = carro.darPlaca();
+                }
             }
         }
-        // buscar puesto de carro
-        for (int i = 0; i < TAMANO; i++) {
-            if (puestos[i].estaOcupado()==true) {
-                puesto1 = i +1;
-            }
-        }
-
-
-        String cambio = Integer.toString(puesto1);
-        return cambio;
+        return placa;
     }
 
     /**
@@ -346,7 +344,19 @@ public class Parqueadero {
      * @return Respuesta 2.
      */
     public String metodo2() {
-        return "respuesta 2";
+        int contador = 0;
+        String mensaje = "";
+        for (Puesto puesto:puestos){
+            if (puesto.estaOcupado()== true){
+                contador += 1;
+            }
+        }
+        if (contador==40){
+            mensaje = "El parqueadero está lleno";
+        }else {
+            mensaje = "Hay puestos disponibles";
+        }
+        return mensaje;
     }
 
 }
